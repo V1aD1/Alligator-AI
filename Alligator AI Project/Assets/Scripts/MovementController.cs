@@ -52,9 +52,7 @@ public class MovementController : MonoBehaviour {
     void Start () {
 
         Debug.Assert(ActorToMove != null, "ActorToMove not set!");
-
-        //TODO add assert for animation controller
-
+        Debug.Assert(actorAnimator != null, "ActorAnimator not set!");
 
         //Setup the behaviour tree
         var root = new Sequencer();
