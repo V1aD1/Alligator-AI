@@ -7,9 +7,22 @@ using UnityEngine;
 /// </summary>
 public class MoveToPosition : Task
 {
-    public override Status Execute()
+    Vector3 currentDirection = Vector3.zero;
+
+    public override Status Execute(GameObject actor, MovementController controller)
     {
-        Debug.Log("MoveToPosition");
-        return Status.Success;
+        currentDirection = actor.transform.forward;
+        Vector3 heading = controller.Destination - actor.transform.position;
+        Vector3 idealDirection = heading / heading.magnitude;
+
+
+        currentDirection = Vector3.Lerp(currentDirection, idealDirection, Time.deltaTime);
+        actor.transform.rotation = Quaternion.FromToRotation(Vector3.forward, currentDirection);
+
+        actor.transform.Translate(currentDirection * 1 * Time.deltaTime);
+
+        Debug.DrawLine(actor.transform.position, currentDirection * 100, Color.blue);
+        Debug.DrawLine(actor.transform.position, idealDirection * 100, Color.white);
+        return Status.InProgress;
     }
 }

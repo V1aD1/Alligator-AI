@@ -2,12 +2,16 @@
 using System.Collections.Generic;
 using UnityEngine;
 
+/// <summary>
+/// Base type for every node in the behaviour tree.
+/// Must implement an Execute() function.
+/// </summary>
 public abstract class Task {
 
     public Status Status;
     public string Name;
 
-    public abstract Status Execute();
+    public abstract Status Execute(GameObject actor, MovementController controller);
 }
 
 

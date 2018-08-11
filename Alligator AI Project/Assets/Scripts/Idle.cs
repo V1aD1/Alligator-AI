@@ -4,9 +4,17 @@ using UnityEngine;
 
 public class Idle : Task
 {
-    public override Status Execute()
+    float timeToIdle = 2f;
+
+    public override Status Execute(GameObject actor, MovementController controller)
     {
         Debug.Log("Idle");
-        return Status.Success;
+
+        timeToIdle -= Time.deltaTime;
+
+        if(timeToIdle <= 0f)
+            return Status.Success;
+
+        return Status.InProgress;
     }
 }

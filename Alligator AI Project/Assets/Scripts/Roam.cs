@@ -7,15 +7,8 @@ public class Roam : Sequencer {
     public Roam(Vector3 minRange, Vector3 maxRange)
     {
         Children = new Task[2];
-        Children[0] = new PickPosition(minRange, maxRange);
+        Children[0] = new ChooseandSetNewDestination(minRange, maxRange);
         Children[1] = new MoveToPosition();
 
-    }
-
-    public override Status Execute()
-    {
-        Debug.Log("Roam");
-
-        return base.Execute();
     }
 }

@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 
 /// <summary>
-/// This task runs all its children in order
+/// This task runs all its children in the order they are stored in the Children array.
 /// </summary>
 public class Sequencer : Task
 {
@@ -20,9 +20,9 @@ public class Sequencer : Task
         currentLeafId = 0;
     }*/
 
-    public override Status Execute()
+    public override Status Execute(GameObject actor, MovementController controller)
     {
-        var status = Children[currentLeafId].Execute();
+        var status = Children[currentLeafId].Execute(actor, controller);
 
         if (status == Status.InProgress)
         {
