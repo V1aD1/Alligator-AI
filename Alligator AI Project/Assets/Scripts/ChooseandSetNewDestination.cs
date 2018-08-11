@@ -2,12 +2,19 @@
 using System.Collections.Generic;
 using UnityEngine;
 
+/// <summary>
+/// This task chooses a random point between the specified ranges
+/// and sets the destination in the corresponding MovementController.
+/// The y component of the destination
+/// will always be 0, since it is assumed this task is ONLY
+/// used for grounded actors. 
+/// </summary>
 public class ChooseandSetNewDestination : Task
 {
-    public Vector3 MinRange;
-    public Vector3 MaxRange;
+    Vector2 MinRange;
+    Vector2 MaxRange;
 
-    public ChooseandSetNewDestination(Vector3 minRange, Vector3 maxRange)
+    public ChooseandSetNewDestination(Vector2 minRange, Vector2 maxRange)
     {
         MinRange = minRange;
         MaxRange = maxRange;
@@ -16,8 +23,8 @@ public class ChooseandSetNewDestination : Task
     public override Status Execute(GameObject actor, MovementController controller)
     {
         Vector3 newPos = new Vector3(Random.Range(MinRange.x, MaxRange.x),
-                              Random.Range(MinRange.y, MaxRange.y),
-                              Random.Range(MinRange.z, MaxRange.z));
+                              0,
+                              Random.Range(MinRange.y, MaxRange.y));
 
         
         controller.Destination = newPos;

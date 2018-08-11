@@ -4,13 +4,15 @@ using UnityEngine;
 
 public class MovementController : MonoBehaviour {
 
-    public readonly float MaxSpeed = 5f;
-    public readonly Vector3 MinRange = new Vector3(4, 0.2f, -3);
-    public readonly Vector3 MaxRange = new Vector3(-4, 0.2f, 4);
+    public float MaxSpeed = 1f;
+    public float MinDistanceUntilDestinationReached = 0.1f;
+    public Vector2 MinRange = new Vector2(4, -3);
+    public Vector2 MaxRange = new Vector2(-4, 4);
     public GameObject ActorToMove;
 
-    Vector3 destination = Vector3.zero;
-    Task Root;
+    private Vector3 destination = Vector3.zero;
+    private Task Root;
+    private Animator actorAnimator;
 
     /// <summary>
     /// destination will only be set if within range specified by MinRange and MaxRange
@@ -24,15 +26,30 @@ public class MovementController : MonoBehaviour {
 
         set
         {
-            if (MathHelper.IsVectorWithinRange(MinRange, MaxRange, value))
+            Debug.Assert(value.y == 0f, "Destination must always have a y value of 0!!");
+            if (value.y == 0f && 
+                MathHelper.IsVectorWithinRange(new Vector3(MinRange.x, 0f, MinRange.y), new Vector3(MaxRange.x, 0f, MaxRange.y), value))
             {
-                destination = value;
+                destination = new Vector3(value.x, 0f, value.z);
             }
         }
     }
 
-	// Use this for initialization
-	void Start () {
+    public Animator ActorAnimator
+    {
+        get
+        {
+            return actorAnimator;
+        }
+    }
+
+    void Awake()
+    {
+        actorAnimator = ActorToMove.GetComponentInChildren<Animator>();    
+    }
+
+    // Use this for initialization
+    void Start () {
 
         Debug.Assert(ActorToMove != null, "ActorToMove not set!");
 

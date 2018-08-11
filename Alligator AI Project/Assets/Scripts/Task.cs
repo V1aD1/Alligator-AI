@@ -4,7 +4,7 @@ using UnityEngine;
 
 /// <summary>
 /// Base type for every node in the behaviour tree.
-/// Must implement an Execute() function.
+/// Must implement Execute() and Reset() functions.
 /// </summary>
 public abstract class Task {
 
@@ -12,6 +12,10 @@ public abstract class Task {
     public string Name;
 
     public abstract Status Execute(GameObject actor, MovementController controller);
+    public virtual void Reset()
+    {
+        ;
+    }
 }
 
 

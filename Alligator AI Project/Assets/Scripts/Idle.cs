@@ -12,9 +12,18 @@ public class Idle : Task
 
         timeToIdle -= Time.deltaTime;
 
-        if(timeToIdle <= 0f)
+        if (timeToIdle <= 0f)
+        {
             return Status.Success;
+        }
 
+        controller.ActorAnimator.SetInteger("AnimState", 0);
         return Status.InProgress;
+    }
+
+    public override void Reset()
+    {
+        timeToIdle = 2f;
+        base.Reset();
     }
 }

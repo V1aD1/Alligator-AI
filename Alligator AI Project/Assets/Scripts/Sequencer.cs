@@ -10,19 +10,19 @@ public class Sequencer : Task
 
     public Task[] Children;
 
-    int currentLeafId = 0;
+    int currentTaskId = 0;
 
     /*public Sequencer(Task[] children)
     {
         if (children.Length == 0)
             Debug.LogError("Sequencer was created with no children");
 
-        currentLeafId = 0;
+        currentTaskId = 0;
     }*/
 
     public override Status Execute(GameObject actor, MovementController controller)
     {
-        var status = Children[currentLeafId].Execute(actor, controller);
+        var status = Children[currentTaskId].Execute(actor, controller);
 
         if (status == Status.InProgress)
         {
@@ -31,16 +31,17 @@ public class Sequencer : Task
 
         else if (status == Status.Fail)
         {
-            currentLeafId = 0;
+            currentTaskId = 0;
             return Status.Fail;
         }
 
         //the current child task succesfully completed
-        currentLeafId++;
+        Children[currentTaskId].Reset();
+        currentTaskId++;
 
-        if (currentLeafId >= Children.Length)
+        if (currentTaskId >= Children.Length)
         {
-            currentLeafId = 0;
+            currentTaskId = 0;
             return Status.Success;
         }
 
