@@ -9,12 +9,12 @@ using UnityEngine;
 /// will always be 0, since it is assumed this task is ONLY
 /// used for grounded actors. 
 /// </summary>
-public class ChooseandSetNewDestination : Task
+public class ChooseAndSetNewDestination : Task
 {
     Vector2 MinRange;
     Vector2 MaxRange;
 
-    public ChooseandSetNewDestination(Vector2 minRange, Vector2 maxRange)
+    public ChooseAndSetNewDestination(Vector2 minRange, Vector2 maxRange)
     {
         MinRange = minRange;
         MaxRange = maxRange;
