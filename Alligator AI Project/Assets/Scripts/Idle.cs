@@ -4,7 +4,14 @@ using UnityEngine;
 
 public class Idle : Task
 {
-    float timeToIdle = 2f;
+    float maxTimeToIdle;
+    float timeToIdle = 0f;
+
+    public Idle(float maxTimeToIdle)
+    {
+        this.maxTimeToIdle = maxTimeToIdle;
+        timeToIdle = Random.Range(0f, maxTimeToIdle);
+    }
 
     public override Status Execute(GameObject actor, MovementController controller)
     {
@@ -23,7 +30,7 @@ public class Idle : Task
 
     public override void Reset()
     {
-        timeToIdle = 2f;
+        timeToIdle = Random.Range(0f, maxTimeToIdle);
         base.Reset();
     }
 }

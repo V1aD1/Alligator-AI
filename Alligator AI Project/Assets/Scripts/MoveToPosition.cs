@@ -7,19 +7,22 @@ using UnityEngine;
 /// </summary>
 public class MoveToPosition : Task
 {
-    float maxTurnSpeed = 0.5f;
+    float maxTurnSpeed = 1f;
     float currentTurnSpeed = 0f;
     float currentMoveSpeed = 0f;
+    float orbitRatio;
 
-    public MoveToPosition(float actorForwardAxisLength)
+    public MoveToPosition()
     {
-        
+        //the actual ratio is more like 0.65f/max turn speed, 
+        //but we use 0.8f/max turn speed because it's safer
+        orbitRatio = 0.8f / maxTurnSpeed;
     }
 
     public override Status Execute(GameObject actor, MovementController controller)
     {
         //ignoring y component in case destination is above or below the actor
-        //which in this roaming behavior doesn't account for
+        //which this roaming behavior doesn't account for
         Vector3 vectorToDestination = controller.Destination - actor.transform.position;
         vectorToDestination.y = 0;
 
@@ -29,8 +32,8 @@ public class MoveToPosition : Task
         actor.transform.rotation = Quaternion.Slerp(
             actor.transform.rotation,
             Quaternion.LookRotation(controller.Destination - actor.transform.position),
-            maxTurnSpeed * Time.deltaTime);
-        actor.transform.position += actor.transform.forward * controller.MaxMovementSpeed * Time.deltaTime;
+            currentTurnSpeed * Time.deltaTime);
+        actor.transform.position += actor.transform.forward * currentMoveSpeed * Time.deltaTime;
 
         controller.ActorAnimator.SetInteger("AnimState", 1);
 
@@ -50,21 +53,16 @@ public class MoveToPosition : Task
         return Status.InProgress;
     }
 
-
     //the actor will orbit around the destination if: 
-    // 1. Max turn speed = 1 degree/ second
-    // 2. Speed / distance to destination ~= 0.63 
-    // 3. Actor is heading in a perpendicular direction to the destination
+    // 1. Distance to destination / max movement speed ~= 0.65f/max turn speed 
+    // 2. Actor is heading in a perpendicular direction to the destination
     //
-    //this math is not random! I inspected the orbiting distance at different speeds and reached the conclusions
-    //stated above. Of course, if the Max Turn Speed is different than 1 degree/second, then the 
-    //speed / distance to destination ratio will be different. BUT the max turn speed  is not exposed, since 
-    //it would look unnatural if the alligator could turn faster. So I do not want to do the unnecessary calculations
-    //every frame to determine the 
+    //this math is not random! I inspected the orbiting distance at different speeds and
+    //turn angles to reach the conclusions stated above 
     private bool IsInOrbit(Vector3 vectorToDestination, float maxMovementSpeed, Vector3 actorForward)
     {
         //the ratio and angle are higher than the actual values as a safety factor
-        if (vectorToDestination.magnitude < maxMovementSpeed * 0.7f && Vector3.Angle(vectorToDestination, actorForward) > 80f)
+        if (vectorToDestination.magnitude / maxMovementSpeed < orbitRatio && Vector3.Angle(vectorToDestination, actorForward) > 80f)
         {
             return true;
         }

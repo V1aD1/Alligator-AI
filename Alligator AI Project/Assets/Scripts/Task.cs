@@ -18,7 +18,6 @@ public abstract class Task {
     }
 }
 
-
 public enum Status
 {
     Success = 1,

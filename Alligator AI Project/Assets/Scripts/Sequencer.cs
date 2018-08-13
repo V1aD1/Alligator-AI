@@ -7,18 +7,8 @@ using UnityEngine;
 /// </summary>
 public class Sequencer : Task
 {
-
     public Task[] Children;
-
     int currentTaskId = 0;
-
-    /*public Sequencer(Task[] children)
-    {
-        if (children.Length == 0)
-            Debug.LogError("Sequencer was created with no children");
-
-        currentTaskId = 0;
-    }*/
 
     public override Status Execute(GameObject actor, MovementController controller)
     {

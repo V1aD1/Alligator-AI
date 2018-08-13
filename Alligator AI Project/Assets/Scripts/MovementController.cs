@@ -3,12 +3,17 @@ using System.Collections.Generic;
 using UnityEngine;
 
 public class MovementController : MonoBehaviour {
-
+    [Tooltip("Recommended below 3. Otherwise actors the size of alligators " +
+             "will \"orbit\" and never reach destination")]
     public float MaxMovementSpeed = 1f;
+    public float MaxSecondsToIdle = 4f;
+    [Tooltip("Actor has arrived if they are within this distance from their destination")]
     public float MinDistanceUntilDestinationReached = 0.1f;
+    [Tooltip("Corner of walkable area")]
     public Vector2 MinRange = new Vector2(4, -3);
+    [Tooltip("OPPOSITE corner of walkable area")]
     public Vector2 MaxRange = new Vector2(-4, 4);
-    public GameObject ActorToMove;
+    //public GameObject ActorToMove;
 
     private Vector3 destination = Vector3.zero;
     private Task Root;
@@ -38,17 +43,16 @@ public class MovementController : MonoBehaviour {
 
     void Awake()
     {
-        ActorAnimator = ActorToMove.GetComponentInChildren<Animator>();    
+        ActorAnimator = gameObject.GetComponent<Animator>();    
     }
 
     // Use this for initialization
     void Start () {
-        float actorForwardAxisLength = ActorToMove.GetComponent<BoxCollider>().bounds.size.z;
+        float actorForwardAxisLength = gameObject.GetComponent<BoxCollider>().bounds.size.z;
 
         //the 4* multiplier is abit arbitrary
         float recommendedAreaDiagonalLength = 4 * actorForwardAxisLength;
 
-        Debug.Assert(ActorToMove != null, "ActorToMove not set!");
         Debug.Assert(ActorAnimator != null, "ActorAnimator not set!");
         Debug.Assert((MinRange - MaxRange).magnitude > recommendedAreaDiagonalLength, 
                      "It is recommended that the distance between the corners of the walkable area is at least: "
@@ -57,23 +61,15 @@ public class MovementController : MonoBehaviour {
         //Setup the behaviour tree
         var root = new Sequencer();
         root.Children = new Task[2];
-        root.Children[0] = new Roam(MinRange, MaxRange, ActorToMove.GetComponent<BoxCollider>().bounds.size.z);
-        root.Children[1] = new Idle();
+        root.Children[0] = new Roam(MinRange, MaxRange);
+        root.Children[1] = new Idle(MaxSecondsToIdle);
 
         Root = root;
-
     }
 	
 	// Update is called once per frame
 	void Update () {
-        if(Input.GetKey("up"))
-        {
-            ActorToMove.transform.position = new Vector3(-2.12f, 0, 0);
-            ActorToMove.transform.rotation = Quaternion.LookRotation(new Vector3(0,0,0));
-        }
-
-        Root.Execute(ActorToMove, this);
-        Debug.DrawLine(ActorToMove.transform.position, destination, Color.red);
-        Debug.Log("Current destination: " + Destination);
+        Root.Execute(gameObject, this);
+        Debug.DrawLine(gameObject.transform.position, destination, Color.red);
 	}
 }

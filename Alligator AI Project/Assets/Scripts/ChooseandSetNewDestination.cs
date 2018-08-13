@@ -11,25 +11,22 @@ using UnityEngine;
 /// </summary>
 public class ChooseAndSetNewDestination : Task
 {
-    Vector2 MinRange;
-    Vector2 MaxRange;
+    Vector2 minRange;
+    Vector2 maxRange;
 
     public ChooseAndSetNewDestination(Vector2 minRange, Vector2 maxRange)
     {
-        MinRange = minRange;
-        MaxRange = maxRange;
+        this.minRange = minRange;
+        this.maxRange = maxRange;
     }
 
     public override Status Execute(GameObject actor, MovementController controller)
     {
-        Vector3 newPos = new Vector3(Random.Range(MinRange.x, MaxRange.x),
+        Vector3 newPos = new Vector3(Random.Range(minRange.x, maxRange.x),
                               0,
-                              Random.Range(MinRange.y, MaxRange.y));
+                              Random.Range(minRange.y, maxRange.y));
 
-
-        //controller.Destination = newPos;
-        controller.Destination = new Vector3(0,0,0);
-
+        controller.Destination = newPos;
         return Status.Success;
     }
 }
