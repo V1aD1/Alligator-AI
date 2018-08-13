@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class MovementController : MonoBehaviour {
 
-    public float MaxSpeed = 1f;
+    public float MaxMovementSpeed = 1f;
     public float MinDistanceUntilDestinationReached = 0.1f;
     public Vector2 MinRange = new Vector2(4, -3);
     public Vector2 MaxRange = new Vector2(-4, 4);
@@ -12,7 +12,6 @@ public class MovementController : MonoBehaviour {
 
     private Vector3 destination = Vector3.zero;
     private Task Root;
-    private Animator actorAnimator;
 
     /// <summary>
     /// destination will only be set if within range specified by MinRange and MaxRange
@@ -35,29 +34,30 @@ public class MovementController : MonoBehaviour {
         }
     }
 
-    public Animator ActorAnimator
-    {
-        get
-        {
-            return actorAnimator;
-        }
-    }
+    public Animator ActorAnimator { get; private set; }
 
     void Awake()
     {
-        actorAnimator = ActorToMove.GetComponentInChildren<Animator>();    
+        ActorAnimator = ActorToMove.GetComponentInChildren<Animator>();    
     }
 
     // Use this for initialization
     void Start () {
+        float actorForwardAxisLength = ActorToMove.GetComponent<BoxCollider>().bounds.size.z;
+
+        //the 4* multiplier is abit arbitrary
+        float recommendedAreaDiagonalLength = 4 * actorForwardAxisLength;
 
         Debug.Assert(ActorToMove != null, "ActorToMove not set!");
-        Debug.Assert(actorAnimator != null, "ActorAnimator not set!");
+        Debug.Assert(ActorAnimator != null, "ActorAnimator not set!");
+        Debug.Assert((MinRange - MaxRange).magnitude > recommendedAreaDiagonalLength, 
+                     "It is recommended that the distance between the corners of the walkable area is at least: "
+                     +recommendedAreaDiagonalLength + "so as to avoid strange behaviour.");
 
         //Setup the behaviour tree
         var root = new Sequencer();
         root.Children = new Task[2];
-        root.Children[0] = new Roam(MinRange, MaxRange);
+        root.Children[0] = new Roam(MinRange, MaxRange, ActorToMove.GetComponent<BoxCollider>().bounds.size.z);
         root.Children[1] = new Idle();
 
         Root = root;
