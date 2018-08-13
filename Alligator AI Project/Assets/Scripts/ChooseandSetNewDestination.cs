@@ -26,8 +26,9 @@ public class ChooseAndSetNewDestination : Task
                               0,
                               Random.Range(MinRange.y, MaxRange.y));
 
-        
-        controller.Destination = newPos;
+
+        //controller.Destination = newPos;
+        controller.Destination = new Vector3(0,0,0);
 
         return Status.Success;
     }

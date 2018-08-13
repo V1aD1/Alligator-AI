@@ -66,6 +66,12 @@ public class MovementController : MonoBehaviour {
 	
 	// Update is called once per frame
 	void Update () {
+        if(Input.GetKey("up"))
+        {
+            ActorToMove.transform.position = new Vector3(-2.12f, 0, 0);
+            ActorToMove.transform.rotation = Quaternion.LookRotation(new Vector3(0,0,0));
+        }
+
         Root.Execute(ActorToMove, this);
         Debug.DrawLine(ActorToMove.transform.position, destination, Color.red);
         Debug.Log("Current destination: " + Destination);
