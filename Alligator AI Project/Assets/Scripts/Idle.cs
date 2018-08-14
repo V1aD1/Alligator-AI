@@ -2,6 +2,10 @@
 using System.Collections.Generic;
 using UnityEngine;
 
+/// <summary>
+/// This task idles the actor for a random amount of time, between 0 seconds
+/// and maxTimeToIdle, which is specified in the constructor of this class.
+/// </summary>
 public class Idle : Task
 {
     float maxTimeToIdle;

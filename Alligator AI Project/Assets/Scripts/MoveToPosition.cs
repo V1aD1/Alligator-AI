@@ -29,11 +29,11 @@ public class MoveToPosition : Task
         currentMoveSpeed = Mathf.Lerp(currentMoveSpeed, controller.MaxMovementSpeed, Time.deltaTime);
         currentTurnSpeed = Mathf.Lerp(currentTurnSpeed, maxTurnSpeed, Time.deltaTime);
 
+        actor.transform.position += actor.transform.forward * currentMoveSpeed * Time.deltaTime;
         actor.transform.rotation = Quaternion.Slerp(
             actor.transform.rotation,
             Quaternion.LookRotation(controller.Destination - actor.transform.position),
             currentTurnSpeed * Time.deltaTime);
-        actor.transform.position += actor.transform.forward * currentMoveSpeed * Time.deltaTime;
 
         controller.ActorAnimator.SetInteger("AnimState", 1);
 
